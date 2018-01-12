@@ -8,6 +8,7 @@
 #include <vector>
 #include <algorithm>
 #include <climits>
+#include "canvas.hh"
 
 //global variables from gifts.txt
 Rectangle              table(Point(100.0, 80.0));
@@ -92,6 +93,9 @@ int main(){
 	//intialized with the size of the table
 	std::vector<Rectangle> free_rectangles;
 	free_rectangles.push_back(table);
+	for(int i=0;i<to_be_placed.size();i++){
+		std::cout<<to_string(to_be_placed[i])<<std::endl;
+	}
 
 	while(true){
 		//variables to determine optimal index
@@ -121,8 +125,10 @@ int main(){
 				}
 			}
 		}
+		std::cout<<"Index of free space + Index of object to place: "<<best_free<<"("<<to_string(free_rectangles[best_free])<<") "<<best_obj<<"("<<to_string(to_be_placed[best_obj])<<")"<<" min:"<<min<<std::endl;
+
 		//(e)
-		if(min>=1e300) {
+		if(min>=1000000) {
 			std::cout<<"There is no more space, for another gift."<<std::endl;
 			break;
 		}
@@ -130,6 +136,7 @@ int main(){
 			std::vector<Rectangle> newRectangles;
 			if(transpose){
 				to_be_placed[best_obj].transpose().translate(free_rectangles[best_free].getP0());
+
 				already_placed.push_back(to_be_placed[best_obj].transpose());
 				newRectangles=sas_rule(free_rectangles[best_free].transpose(),to_be_placed[best_obj].transpose());
 			}
@@ -143,7 +150,31 @@ int main(){
 			free_rectangles.erase(free_rectangles.begin()+best_free);
 			free_rectangles.insert(std::end(free_rectangles),std::begin(newRectangles),std::end(newRectangles));
 		}
+		//(f)
+		for(int i=0;i<free_rectangles.size();i++){
+			for(int j=0;j<free_rectangles.size();j++){
+				if(j>i){
+					Rectangle uni=rectangle_union(free_rectangles[i],free_rectangles[j]);
+					if(		free_rectangles[i].getX0()>=uni.getX0() &&
+							free_rectangles[i].getX1()<=uni.getX1() &&
+							free_rectangles[i].getY0()>=uni.getY0() &&
+							free_rectangles[i].getY1()<=uni.getY1() &&
+							free_rectangles[j].getX0()>=uni.getX0() &&
+							free_rectangles[j].getX1()<=uni.getX1() &&
+							free_rectangles[j].getY0()>=uni.getY0() &&
+							free_rectangles[j].getY1()<=uni.getY1() )
+						free_rectangles.erase(free_rectangles.begin()+i);
+						free_rectangles.erase(free_rectangles.begin()+j);
+						free_rectangles.push_back(uni);
+				}
+			}
+		}
 	}
+	std::cout<<"Gifts placed: "<<std::endl;
+	for(int i=0;i<already_placed.size();i++){
+		std::cout<<to_string(already_placed[i])<<std::endl;
+	}
+
 
 	return 0;
 }
