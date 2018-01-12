@@ -4,11 +4,17 @@
  *  Created on: Jan 11, 2018
  *      Author: nuar
  */
-#include "rectangle.h"
+
 #include <vector>
 #include <algorithm>
 #include <climits>
-#include "canvas.hh"
+#include "rectangle.h"
+
+/*
+ * Program isn't very functional at this point,
+ * didn't really have the time to Debug properly.
+ * Stressful holidays... Anyway hope you can make something of it.
+ */
 
 //global variables from gifts.txt
 Rectangle              table(Point(100.0, 80.0));
@@ -93,9 +99,6 @@ int main(){
 	//intialized with the size of the table
 	std::vector<Rectangle> free_rectangles;
 	free_rectangles.push_back(table);
-	for(int i=0;i<to_be_placed.size();i++){
-		std::cout<<to_string(to_be_placed[i])<<std::endl;
-	}
 
 	while(true){
 		//variables to determine optimal index
@@ -111,7 +114,6 @@ int main(){
 				}
 			}
 		}
-
 		//(d)
 		//variable to check whether obj will be added as transposed
 		bool transpose=false;
@@ -150,32 +152,12 @@ int main(){
 			free_rectangles.erase(free_rectangles.begin()+best_free);
 			free_rectangles.insert(std::end(free_rectangles),std::begin(newRectangles),std::end(newRectangles));
 		}
-		//(f)
-		for(int i=0;i<free_rectangles.size();i++){
-			for(int j=0;j<free_rectangles.size();j++){
-				if(j>i){
-					Rectangle uni=rectangle_union(free_rectangles[i],free_rectangles[j]);
-					if(		free_rectangles[i].getX0()>=uni.getX0() &&
-							free_rectangles[i].getX1()<=uni.getX1() &&
-							free_rectangles[i].getY0()>=uni.getY0() &&
-							free_rectangles[i].getY1()<=uni.getY1() &&
-							free_rectangles[j].getX0()>=uni.getX0() &&
-							free_rectangles[j].getX1()<=uni.getX1() &&
-							free_rectangles[j].getY0()>=uni.getY0() &&
-							free_rectangles[j].getY1()<=uni.getY1() )
-						free_rectangles.erase(free_rectangles.begin()+i);
-						free_rectangles.erase(free_rectangles.begin()+j);
-						free_rectangles.push_back(uni);
-				}
-			}
-		}
+
 	}
 	std::cout<<"Gifts placed: "<<std::endl;
 	for(int i=0;i<already_placed.size();i++){
 		std::cout<<to_string(already_placed[i])<<std::endl;
 	}
-
-
 	return 0;
 }
 
