@@ -31,15 +31,51 @@ int main(){
 }
 
 
-//This function can handle any Container that specified an Iterator
-//vectors, lists incl.
+/*	This function can handle any Container that specified an Iterator:
+*	vectors, lists incl./
+*	Here is how the implemented algorithms work:
+*	std::rotate rotates the order of elements so that the middle element
+*	becomes the new first element.
+*	Therefore 3 Arguments:
+*
+*	(first,last): Forward Iterator - initial and final pos of the sequence to be rotated
+*	--> Using std::upper_bound , which returns an iterator to the greatest element in the range
+*		--> 	If there is no greatest element, or equivalent greatest elements
+*				-> returning the pos of the last element--> Which is exactly
+*	   		 	the functionality we try to accomplish in insertion_sorts for the first element.
+*	--> range always incremented by one for each iteration, only looking at a position once.
+*	    --> this is what we aim to do with insertion_sort.
+*	--> Ultimately we get the range that comes before the current element.
+*
+*	(middle): Forward Iterator pointing to the element within the range(first,last)
+*	--> std::next(it) provides an Iterator-Element that will be shoved before the range.
+*		--> To its currently correct position.
+*
+*   i.e. in pseudo code:
+*
+*   given is a vector<int> vec={5,3,9,7}
+*
+*   first step:
+*   std::rotate(std::upper_bound(vec.begin(),pos(0),5),pos(0), std::next(pos0))
+*   --> (5,3,9,7)
+*   second step:
+*   std::rotate(std::upper_bound(vec.begin(),pos(1),3),pos(1), std::next(pos1))
+*   --> //range to view 5,3 --> 5 greatest element so we take the iter_pos of 5
+*   	as the beginning and the end of the range is pos(1)=3
+*  	--> then we copy the pos(1) before that range.
+*   --> (3,5,9,7)
+*
+*   and so on...
+*/
+
 template<typename T>
 void insertion_sort(T& data)
 {
-	for (auto it = data.begin(); it != data.end(); ++it)
+	for(auto it = data.begin(); it != data.end(); ++it)
         std::rotate(std::upper_bound(data.begin(), it, *it), it, std::next(it));
-    for(auto it=data.begin();it!=data.end();++it)
+    for(auto it= data.begin();it != data.end(); ++it)
     	std::cout<<*it<<" ";
+
 	std::cout<<"\n";
 }
 
