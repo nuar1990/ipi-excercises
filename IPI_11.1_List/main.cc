@@ -68,8 +68,8 @@ int main(){
 	return 0;
 	//My implementation adds elements in ~O(n) time
 	//-->Same complexity as STL-Lib, but it adds elements in roughly half the time.
-	// That the time for the STL-lib implementation isn't surprising:
-	// It needs to proper encapsulation for other functionalities.
+	// That the time for the STL-lib implementation is higher isn't surprising:
+	// It needs to add proper encapsulation for other functionalities.
 	// +it's created by using inline templates (static polymorphism)
 	// that doesn't really have an influence on the runtime however.
 
