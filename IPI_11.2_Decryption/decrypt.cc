@@ -16,29 +16,39 @@ int main(){
 	//b)
 	std::map<char,int> count;
 	char c;
+	int upper=0,lower=0;
 	while(!crypted.eof()){
 		crypted>>c;
-		//c=std::tolower(c); //If possible make lowercase, else char unchanged
 		if(c<65 || c>122 || (c>90&&c<97)) continue; //ignoring everything but letters.
 		std::map<char,int>::iterator it=count.find(c);
 		std::pair<std::map<char,int>::iterator,bool> ret;
 
-		if(it==count.end()) count.insert(std::pair<char,int>(c,1));
+		if(it==count.end()) {
+			count.insert(std::pair<char,int>(c,1));
+			if(c>64&&c<91) upper++;
+			else lower++;
+		}
 		else count.insert(std::pair<char,int>(c,it->second++));
 	}
-	//c)
-	std::map<int,char> sorted;
+	//c) the exercise doesn't advise for the right kind of STL container
+	// got to use a multimap here - since it's possible that
+	// multiple characters have identical occurrences,
+	// regular map doesn't allow for duplicate values under the same key
+	std::multimap<int,char> sorted;
 	for(auto it=count.begin();it!=count.end();++it){
 		sorted.insert(std::pair<int,char>(it->second,it->first));
 	}
-	//req. c++11 or later
-	std::vector<char> letters= {'z','q','x','j','k','v','b','p','y','g','f','w','m','u','c','l','d','r','h','s','n','i','o','a','t','e'};
-	std::vector<char> firstLetters= {'x','z','q','k','j','y','v','u','g','n','l','e','r','d','m','f','h','p','b','c','w','s','i','o','a','t'};
+	//requires c++11 or later
+	std::vector<char> letters= {'j','z','q','x','k','v','b','y','g','p','w','f','m','c','u','l','d','r','h','i','s','n','o','a','t','e'};
+	std::vector<char> firstLetters= {'k','x','z','q','u','j','v','g','d','y','r','f','e','o','p','m','l','h','b','s','w','a','c','t','n','i'};
+
 	//d
 	std::map<char,char> decrypt;
 
-	int distU=0;
-	int distL=0;
+	//variables for accessing proper element in vectors, dynamic according to how many characters occure.
+	int distU=upper-firstLetters.size();
+	int distL=lower-letters.size();
+
 	for(auto it=sorted.begin();it!=sorted.end();++it){
 		//upper-case
 		if(it->second<91){
@@ -63,13 +73,6 @@ int main(){
 			else decrypted<<decrypt[*it];
 		}
 		decrypted<<"\n";
-	}
-
-	for(auto it=sorted.begin();it!=sorted.end();++it){
-		std::cout<< it->first<<" => "<<it->second<<"\n";
-	}
-	for(auto it=decrypt.begin();it!=decrypt.end();++it){
-		std::cout<< it->first<<" => "<<it->second<<"\n";
 	}
 	return 0;
 }
