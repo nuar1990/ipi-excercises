@@ -19,13 +19,13 @@ int main(){
 	int upper=0,lower=0;
 	while(!crypted.eof()){
 		crypted>>c;
-		if(c<65 || c>122 || (c>90&&c<97)) continue; //ignoring everything but letters.
+		if(!std::isalpha(c)) continue; //ignoring everything but letters.
 		std::map<char,int>::iterator it=count.find(c);
 		std::pair<std::map<char,int>::iterator,bool> ret;
 
 		if(it==count.end()) {
 			count.insert(std::pair<char,int>(c,1));
-			if(c>64&&c<91) upper++;
+			if(std::isupper(c)) upper++;
 			else lower++;
 		}
 		else count.insert(std::pair<char,int>(c,it->second++));
@@ -51,12 +51,12 @@ int main(){
 
 	for(auto it=sorted.begin();it!=sorted.end();++it){
 		//upper-case
-		if(it->second<91){
+		if(std::isupper(it->second)){
 			decrypt.insert(std::pair<char,char>(it->second,std::toupper(firstLetters[distU])));
 			distU++;
 		}
 		//lower-case
-		if(it->second>96){
+		if(std::islower(it->second)){
 			decrypt.insert(std::pair<char,char>(it->second,letters[distL]));
 			distL++;
 		}

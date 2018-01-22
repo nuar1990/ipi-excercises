@@ -45,11 +45,14 @@ int main(){
 *	   		 	the functionality we try to accomplish in insertion_sorts for the first element.
 *	--> range always incremented by one for each iteration, only looking at a position once.
 *	    --> this is what we aim to do with insertion_sort.
+*		--> std::next(it) provides an Iterator-Element that will be determine the iterator to the last element of
+*		    the range that needs to be viewed.
+*		--> To its currently correct position.
 *	--> Ultimately we get the range that comes before the current element.
 *
+*
 *	(middle): Forward Iterator pointing to the element within the range(first,last)
-*	--> std::next(it) provides an Iterator-Element that will be shoved before the range.
-*		--> To its currently correct position.
+*	--> In this case the currently viewed element.
 *
 *   i.e. in pseudo code:
 *
@@ -69,8 +72,7 @@ int main(){
 */
 
 template<typename T>
-void insertion_sort(T& data)
-{
+void insertion_sort(T& data){
 	for(auto it = data.begin(); it != data.end(); ++it)
         std::rotate(std::upper_bound(data.begin(), it, *it), it, std::next(it));
     for(auto it= data.begin();it != data.end(); ++it)
